@@ -33,8 +33,8 @@ async def extract_mrz(file: UploadFile = File(...)):
         # Reformat the dates to 'DD-MM-YYYY'
         def reformat_date(date_str: str):
             try:
-                # Convert DDMMYY to DD-MM-YYYY
-                return datetime.strptime(date_str, "%d%m%y").strftime("%d-%m-%Y")
+                # Convert YYMMDD to DD-MM-YYYY
+                return datetime.strptime(date_str, "%y%m%d").strftime("%d-%m-%Y")
             except ValueError:
                 return None  # Return None if the date is invalid
         
@@ -42,9 +42,9 @@ async def extract_mrz(file: UploadFile = File(...)):
         mrz_dict["date_of_birth"] = reformat_date(mrz_dict.get("date_of_birth", ""))
         mrz_dict["expiration_date"] = reformat_date(mrz_dict.get("expiration_date", ""))
         
-        # Replace << with spaces in names
-        mrz_dict["names"] = mrz_dict.get("names", "").replace("<", " ").strip()
-        mrz_dict["surname"] = mrz_dict.get("surname", "").replace("<", " ").strip()
+        # Keep the << as placeholders and clean up other fields accordingly
+        mrz_dict["names"] = mrz_dict.get("names", "").strip()
+        mrz_dict["surname"] = mrz_dict.get("surname", "").strip()
 
         # Return the formatted MRZ data
         return {"mrz_data": mrz_dict}
