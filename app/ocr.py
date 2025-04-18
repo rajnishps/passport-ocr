@@ -23,9 +23,9 @@ def extract_passport_data(image_bytes: bytes):
         # Clean and format name fields
         for key in ['names', 'surname']:
             if key in mrz_dict and mrz_dict[key]:
-                # Remove multiple spaces and replace K sequences
+                # Remove multiple spaces and replace K sequences (more than 3)
                 value = re.sub(r'\s+', ' ', mrz_dict[key].strip())
-                value = re.sub(r'K+$', lambda m: '<' * len(m.group()), value)
+                value = re.sub(r'K{4,}', lambda m: '<' * len(m.group()), value)
                 mrz_dict[key] = value
         return mrz_dict
     else:
